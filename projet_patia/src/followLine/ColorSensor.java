@@ -6,7 +6,7 @@ import lejos.robotics.Color;
 
 public class ColorSensor extends EV3ColorSensor
 {
-    private final static int PATH_COLOR = Color.RED;
+    private final static int PATH_COLOR = Color.WHITE;
 
     public ColorSensor(Port port)
     {
