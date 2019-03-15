@@ -9,6 +9,7 @@ import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
 import lejos.robotics.navigation.Waypoint;
+import lejos.utility.Delay;
 
 public class MyNavigator {
 	static EV3LargeRegulatedMotor LEFT_MOTOR = new EV3LargeRegulatedMotor(
@@ -16,6 +17,7 @@ public class MyNavigator {
 	static EV3LargeRegulatedMotor RIGHT_MOTOR = new EV3LargeRegulatedMotor(
 			MotorPort.A);
 	
+	private MovePilot ev3robot;
 	public Navigator navbot;
 	
 	public Waypoint current;
@@ -32,8 +34,8 @@ public class MyNavigator {
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 },
 				WheeledChassis.TYPE_DIFFERENTIAL);
-		MovePilot ev3robot = new MovePilot(chassis);
-
+		ev3robot = new MovePilot(chassis);
+		
 		navbot = new Navigator(ev3robot);
 	}
 	
@@ -56,7 +58,9 @@ public class MyNavigator {
 		return navbot.isMoving();
 	}
 	
-	public void setCoord(Pose p) {
+	public void setCoord(float x, float y) {
+		Pose p = new Pose();
+		p.setLocation(x, y);
 		navbot.getPoseProvider().setPose(p);
 	}
 	
@@ -65,7 +69,13 @@ public class MyNavigator {
 	}
 	
 	public void DeposePalet() {
-		
+//		LEFT_MOTOR.backward();
+//		RIGHT_MOTOR.backward();
+		ev3robot.backward();
+		Delay.msDelay(300);
+		ev3robot.stop();
+//		LEFT_MOTOR.stop();
+//		RIGHT_MOTOR.stop();
 	}
 	
 }

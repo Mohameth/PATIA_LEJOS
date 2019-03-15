@@ -3,6 +3,7 @@ package Final;
 import lejos.hardware.Button;
 import lejos.hardware.Key;
 import lejos.hardware.lcd.LCD;
+import lejos.robotics.navigation.Pose;
 
 public class Controler {
 
@@ -34,6 +35,8 @@ public class Controler {
 		nav.goTo(-10, 0);
 		while(nav.isMoving());
 		pince.OuvrirPince();
+		nav.DeposePalet();
+		nav.setCoord(0,0);
 		nav.goTo(0, 0);
 	}
 	
