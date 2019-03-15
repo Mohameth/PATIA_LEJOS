@@ -1,5 +1,6 @@
 package test;
 
+import Final.TouchSensor;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Keys;
 import lejos.hardware.ev3.EV3;
@@ -16,7 +17,6 @@ import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Waypoint;
 import lejos.utility.Delay;
 import lejos.utility.TextMenu;
-import test.sensor.TouchSensor;
 
 
 public class NavigatorTest {

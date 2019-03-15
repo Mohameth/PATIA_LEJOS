@@ -1,17 +1,17 @@
-package test.sensor;
+package Final;
 
 import lejos.hardware.port.Port;
+import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3TouchSensor;
 
-/**
- * Extends the EV3TouchSensor to provide it with isPressed() functionality.
- */
 
 public class TouchSensor extends EV3TouchSensor
 {
-    public TouchSensor(Port port)
+	private static Port p = SensorPort.S4;
+	
+    public TouchSensor()
     {
-        super(port);
+        super(p);
     }
 
     public boolean isPressed()
