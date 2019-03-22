@@ -52,6 +52,7 @@ public class MyNavigator {
 	public void stop() {
 		navbot.stop();
 		navbot.clearPath();
+		
 	}
 	
 	public boolean isMoving() {
@@ -69,13 +70,9 @@ public class MyNavigator {
 	}
 	
 	public void DeposePalet() {
-//		LEFT_MOTOR.backward();
-//		RIGHT_MOTOR.backward();
 		ev3robot.backward();
 		Delay.msDelay(300);
 		ev3robot.stop();
-//		LEFT_MOTOR.stop();
-//		RIGHT_MOTOR.stop();
 	}
 	
 }

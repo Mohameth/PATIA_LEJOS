@@ -26,7 +26,7 @@ public class NavigatorTest {
 			MotorPort.A);
 	static EV3LargeRegulatedMotor pince = new EV3LargeRegulatedMotor(MotorPort.D);
     
-	static TouchSensor touch = new TouchSensor(SensorPort.S4);
+	static TouchSensor touch = new TouchSensor();
 	
 	static int delayPince = 3000;
 
@@ -82,7 +82,7 @@ public class NavigatorTest {
 		TextLCD lcddisplay = ev3brick.getTextLCD();
 		
 		// set up way points
-		Waypoint wp1 = new Waypoint(50, 50);
+		Waypoint wp1 = new Waypoint(0, 10);
 		Waypoint wp2 = new Waypoint(0, 0);
 		Waypoint wp3 = new Waypoint(-50, 50);
 
@@ -94,6 +94,13 @@ public class NavigatorTest {
 		lcddisplay.drawString("Press ENTER", 0, 2);
 		lcddisplay.drawString("to continue", 0, 3);
 
+		
+//	-----> x
+//	|
+//	|
+//	V y
+		
+		
 		// wait until ENTER key is pressed
 		while (buttons.waitForAnyPress() != Keys.ID_ENTER) {
 			Thread.yield();
