@@ -1,4 +1,4 @@
-package ColorCal;
+package ColorCalibration;
 import java.util.Arrays;
 
 import lejos.hardware.BrickFinder;
