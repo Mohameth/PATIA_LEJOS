@@ -45,12 +45,10 @@ public class Controler {
 	
 	public void rammenePalet() {
 		pince.FermePince();
-		nav.goTo(-10, 0);
+		nav.goTo(-5, 0);
 		while(nav.isMoving());
 		pince.OuvrirPince();
 		nav.DeposePalet();
-		nav.setCoord(0,0);
-		//nav.goTo(0, 0);
 	}
 	
 	public void GoToPalet(Point p) {

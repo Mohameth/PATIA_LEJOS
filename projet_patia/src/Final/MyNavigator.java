@@ -1,5 +1,8 @@
 package Final;
 
+import java.nio.file.Path;
+
+import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.robotics.chassis.Chassis;
@@ -28,13 +31,14 @@ public class MyNavigator {
 		// the offset number is the distance between the center of wheel to
 		// the center of robot, i.e. half of track width
 		
-		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 5.6).offset(-7);
-		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 5.6).offset(7);
+		Wheel wheel1 = WheeledChassis.modelWheel(LEFT_MOTOR, 5.6).offset(-6.75);
+		Wheel wheel2 = WheeledChassis.modelWheel(RIGHT_MOTOR, 5.6).offset(6.75);
 		
 		// set up the chassis type, i.e. Differential pilot
 		Chassis chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 },
 				WheeledChassis.TYPE_DIFFERENTIAL);
 		ev3robot = new MovePilot(chassis);
+		ev3robot.setAngularSpeed(90);
 		
 		navbot = new Navigator(ev3robot);
 	}
@@ -70,9 +74,7 @@ public class MyNavigator {
 	}
 	
 	public void DeposePalet() {
-		ev3robot.backward();
-		Delay.msDelay(300);
-		ev3robot.stop();
+		navbot.goTo(0, 0);		
 	}
 	
 }
