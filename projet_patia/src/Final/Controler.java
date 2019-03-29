@@ -81,11 +81,8 @@ public class Controler implements PropertyChangeListener{
 	public void CloseProg() {
 		this.pince.FermePince();
 		this.nav.stop();
-		try {
-			this.mysensor.stop();
-		} catch (Exception e) {
-			e.getMessage();
-		}
+		this.mysensor.stopMe();
+	
 	}
 
 
