@@ -1,7 +1,10 @@
-package obs_color;
+package Final;
 
-import ColorCal.ColorCalFile;
-import ColorCal.IOFile;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
+import ColorCalibration.ColorCalFile;
+import Final.IOFile;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.ev3.LocalEV3;
@@ -13,8 +16,10 @@ import lejos.robotics.SampleProvider;
 import lejos.robotics.filter.MeanFilter;
 import lejos.utility.Delay;
 
-public class col_sensor_thread extends Thread {
-	private String currentcolor = "gray";
+public class ColorSensorThread extends Thread {
+	private String currentcolor = "gray"; //property
+	PropertyChangeSupport pcs = new  PropertyChangeSupport(this);
+	
 	private IOFile save;
 	private final String[] listOfColors = {"red","green","blue","yellow","white","gray","black"};
 	private float[][] sampleList;
@@ -22,7 +27,7 @@ public class col_sensor_thread extends Thread {
 	private EV3ColorSensor colorSensor;
 	private SampleProvider average;
 	
-	public col_sensor_thread() {
+	public ColorSensorThread() {
 		this.colorSensor = new EV3ColorSensor(port);
 		this.average = new MeanFilter(colorSensor.getRGBMode(), 1);
 		this.colorSensor.setFloodlight(Color.WHITE);
@@ -31,6 +36,18 @@ public class col_sensor_thread extends Thread {
 		this.save = new IOFile();
 		save.initInputFile();
 	}
+	
+	
+	public void addObserver(PropertyChangeListener l) {
+		pcs.addPropertyChangeListener("colorChange", l);
+	}
+	
+	public void setProperty(String val) {
+		String old = currentcolor;
+		currentcolor = val;
+		pcs.firePropertyChange("colorChange", old, val);
+	}
+	
 
 	public String getCurrentColor() {
 		return currentcolor;
@@ -41,8 +58,7 @@ public class col_sensor_thread extends Thread {
 			Delay.msDelay(50);
 			if (isColorDifferent()) {
 				//notify main
-				LCD.drawString("Cur col: " + getCurrentColor(), 0, 2);
-				LCD.refresh();
+				this.setProperty(getCurrentColor());
 			}
 		}
 	}
