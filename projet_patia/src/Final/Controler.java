@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import lejos.hardware.Button;
 import lejos.hardware.Key;
@@ -11,7 +12,7 @@ import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.Pose;
 
-public class Controler implements PropertyChangeListener{
+public class Controler implements PropertyChangeListener {
 
 	private MyNavigator nav;
 	private Pince pince;
@@ -19,6 +20,7 @@ public class Controler implements PropertyChangeListener{
 	private Cam_Palet cam;
 	private Change_Repere transform;
 	private static ColorSensorThread mysensor;
+	private HashMap<String,Point> lineCoord;
 
 	public Controler() {
 		this.nav = new MyNavigator();
@@ -32,6 +34,8 @@ public class Controler implements PropertyChangeListener{
 		
 		mysensor.addObserver(this);
 		mysensor.setProperty("gray");
+		
+		
 	}
 	
 	
@@ -81,11 +85,9 @@ public class Controler implements PropertyChangeListener{
 	public void CloseProg() {
 		this.pince.FermePince();
 		this.nav.stop();
-		try {
-			this.mysensor.stop();
-		} catch (Exception e) {
-			e.getMessage();
-		}
+		
+		this.mysensor.stopMe();
+		
 	}
 
 

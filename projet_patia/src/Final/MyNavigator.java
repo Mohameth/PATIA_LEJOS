@@ -74,7 +74,7 @@ public class MyNavigator {
 	}
 	
 	public void DeposePalet() {
-		navbot.goTo(0, 0);		
+		navbot.goTo(0, 0);
 	}
 	
 }
