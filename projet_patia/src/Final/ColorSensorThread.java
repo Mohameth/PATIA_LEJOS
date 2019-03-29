@@ -3,7 +3,6 @@ package Final;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import ColorCalibration.ColorCalFile;
 import Final.IOFile;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -19,7 +18,7 @@ import lejos.utility.Delay;
 public class ColorSensorThread extends Thread {
 	private String currentcolor = "gray"; //property
 	PropertyChangeSupport pcs = new  PropertyChangeSupport(this);
-	
+	private boolean exit = false;
 	private IOFile save;
 	private final String[] listOfColors = {"red","green","blue","yellow","white","gray","black"};
 	private float[][] sampleList;
@@ -54,7 +53,7 @@ public class ColorSensorThread extends Thread {
 	}
 	
 	public void run() {
-		while (true) {
+		while (!exit) {
 			Delay.msDelay(50);
 			if (isColorDifferent()) {
 				//notify main
@@ -62,6 +61,10 @@ public class ColorSensorThread extends Thread {
 			}
 		}
 	}
+	
+	public void stopMe(){
+        exit = true;
+    }
 	
 	
 	public boolean isColorDifferent() {
@@ -74,7 +77,7 @@ public class ColorSensorThread extends Thread {
 		for (int j=0; j<listOfColors.length;j++) {
 		
 			float[] tmp = save.getFloatArrayFromKey(listOfColors[j]);
-			double scalaire = ColorCalFile.scalaire(sample, tmp );
+			double scalaire = this.scalaire(sample, tmp );
 			if (scalaire < minscal) {
 				minscal = scalaire;
 				color = listOfColors[j];
@@ -89,5 +92,11 @@ public class ColorSensorThread extends Thread {
 		}else {
 			return false;
 		}
+	}
+	
+	public static double scalaire(float[] v1, float[] v2) {
+		return Math.sqrt (Math.pow(v1[0] - v2[0], 2.0) +
+				Math.pow(v1[1] - v2[1], 2.0) +
+				Math.pow(v1[2] - v2[2], 2.0));
 	}
 }
