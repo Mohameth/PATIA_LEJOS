@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import lejos.hardware.Button;
 import lejos.hardware.Key;
+import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.Pose;
 
@@ -80,6 +81,11 @@ public class Controler implements PropertyChangeListener{
 	public void CloseProg() {
 		this.pince.FermePince();
 		this.nav.stop();
+		try {
+			this.mysensor.stop();
+		} catch (Exception e) {
+			e.getMessage();
+		}
 	}
 
 
@@ -87,7 +93,6 @@ public class Controler implements PropertyChangeListener{
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		LCD.drawString("Color: " + evt.getNewValue(), 0, 5);
-		LCD.refresh();
 		//notifier le navigator ici
 	}
 }
