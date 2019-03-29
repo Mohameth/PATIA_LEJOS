@@ -31,8 +31,13 @@ public class Controler implements MyObserver{
 		mysensor = new ColorSensorThread();
 		
 		mysensor.addObserver(this);
-		mysensor.setProperty("gray");
 		mysensor.start(); //start color detector
+		
+		lineCoord = new HashMap<>();
+		lineCoord.put("red", new Point(157,0));
+		lineCoord.put("green", new Point(0,85));
+		lineCoord.put("blue", new Point(0,215));
+		lineCoord.put("yellow", new Point(50,0));
 	}
 	
 	
@@ -89,8 +94,18 @@ public class Controler implements MyObserver{
 
 	@Override
 	public void update(String newCol) {
-		LCD.drawString("Color: " + newCol, 0, 5);
 		//notifier le navigator ici
-		
+		Point p = lineCoord.get(newCol);
+		if (p != null) {
+			if (p.x == 0) {
+				p = transform.getPoint(p);
+				p.x = (int) nav.getCoord().getX();
+				nav.setCoord(p.x, p.y);
+			} else {
+				p = transform.getPoint(p);
+				p.y = (int) nav.getCoord().getY();
+				nav.setCoord(p.x, p.y);
+			}
+		}
 	}
 }
