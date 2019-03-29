@@ -1,4 +1,4 @@
-package ColorCal;
+package Final;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
