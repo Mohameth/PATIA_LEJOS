@@ -3,7 +3,7 @@ package Final;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import ColorCalibration.ColorCalFile;
+//import ColorCalibration.ColorCalFile;
 import Final.IOFile;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
@@ -53,6 +53,12 @@ public class ColorSensorThread extends Thread {
 		return currentcolor;
 	}
 	
+	public static double scalaire(float[] v1, float[] v2) {
+		return Math.sqrt (Math.pow(v1[0] - v2[0], 2.0) +
+				Math.pow(v1[1] - v2[1], 2.0) +
+				Math.pow(v1[2] - v2[2], 2.0));
+	}
+	
 	public void run() {
 		while (true) {
 			Delay.msDelay(50);
@@ -74,7 +80,7 @@ public class ColorSensorThread extends Thread {
 		for (int j=0; j<listOfColors.length;j++) {
 		
 			float[] tmp = save.getFloatArrayFromKey(listOfColors[j]);
-			double scalaire = ColorCalFile.scalaire(sample, tmp );
+			double scalaire = this.scalaire(sample, tmp );
 			if (scalaire < minscal) {
 				minscal = scalaire;
 				color = listOfColors[j];
