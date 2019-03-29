@@ -38,7 +38,7 @@ public class ColorSensorThread extends Thread {
 	
 	
 	public void addObserver(PropertyChangeListener l) {
-		pcs.addPropertyChangeListener("colorChange", l);
+		pcs.addPropertyChangeListener(l);
 	}
 	
 	public void setProperty(String val) {

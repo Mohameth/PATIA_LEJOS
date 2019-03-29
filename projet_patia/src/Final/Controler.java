@@ -26,11 +26,11 @@ public class Controler implements PropertyChangeListener{
 		this.cam = new Cam_Palet();
 		this.transform = new Change_Repere();
 		mysensor = new ColorSensorThread();
-		mysensor.start(); //start color detector
-		
 		
 		mysensor.addObserver(this);
 		mysensor.setProperty("gray");
+		
+		mysensor.start(); //start color detector
 	}
 	
 	
