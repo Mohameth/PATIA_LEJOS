@@ -2,6 +2,9 @@ package Final;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
 
 import Final.IOFile;
 import lejos.hardware.Button;
@@ -17,7 +20,7 @@ import lejos.utility.Delay;
 
 public class ColorSensorThread extends Thread {
 	private String currentcolor = "gray"; //property
-	PropertyChangeSupport pcs = new  PropertyChangeSupport(this);
+	private List<MyObserver> obs = new ArrayList<>();
 	private boolean exit = false;
 	private IOFile save;
 	private final String[] listOfColors = {"red","green","blue","yellow","white","gray","black"};
@@ -36,34 +39,32 @@ public class ColorSensorThread extends Thread {
 		save.initInputFile();
 	}
 	
-	
-	public void addObserver(PropertyChangeListener l) {
-		pcs.addPropertyChangeListener("colorChange", l);
+	public void addObserver(MyObserver channel) {
+	    this.obs.add(channel);
+	}
+
+	public void removeObserver(MyObserver channel) {
+	    this.obs.remove(channel);
 	}
 	
-	public void setProperty(String val) {
-		String old = currentcolor;
-		currentcolor = val;
-		pcs.firePropertyChange("colorChange", old, val);
-	}
+	public void notifyAll(String newCol) {
+        for (MyObserver channel : this.obs) {
+            channel.update(newCol);
+        }
+    }
+	
 	
 
 	public String getCurrentColor() {
 		return currentcolor;
 	}
-	
-	public static double scalaire(float[] v1, float[] v2) {
-		return Math.sqrt (Math.pow(v1[0] - v2[0], 2.0) +
-				Math.pow(v1[1] - v2[1], 2.0) +
-				Math.pow(v1[2] - v2[2], 2.0));
-	}
-	
+		
 	public void run() {
 		while (!exit) {
 			Delay.msDelay(50);
 			if (isColorDifferent()) {
 				//notify main
-				this.setProperty(getCurrentColor());
+				this.notifyAll(getCurrentColor());
 			}
 		}
 	}

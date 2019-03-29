@@ -1,4 +1,4 @@
-package ColorCal;
+package ColorCalibration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

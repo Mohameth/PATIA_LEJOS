@@ -12,7 +12,7 @@ import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.navigation.Pose;
 
-public class Controler implements PropertyChangeListener {
+public class Controler implements MyObserver{
 
 	private MyNavigator nav;
 	private Pince pince;
@@ -29,13 +29,10 @@ public class Controler implements PropertyChangeListener {
 		this.cam = new Cam_Palet();
 		this.transform = new Change_Repere();
 		mysensor = new ColorSensorThread();
-		mysensor.start(); //start color detector
-		
 		
 		mysensor.addObserver(this);
 		mysensor.setProperty("gray");
-		
-		
+		mysensor.start(); //start color detector
 	}
 	
 	
@@ -85,16 +82,15 @@ public class Controler implements PropertyChangeListener {
 	public void CloseProg() {
 		this.pince.FermePince();
 		this.nav.stop();
-		
+
 		this.mysensor.stopMe();
-		
 	}
 
 
-
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		LCD.drawString("Color: " + evt.getNewValue(), 0, 5);
+	public void update(String newCol) {
+		LCD.drawString("Color: " + newCol, 0, 5);
 		//notifier le navigator ici
+		
 	}
 }
