@@ -42,11 +42,6 @@ public abstract class AbstractStateSpaceStrategy implements StateSpaceStrategy {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The list of SolutionListener.
-     */
-    private EventListenerList solutionListenerList = new EventListenerList();
-
-    /**
      * The heuristic of the planner.
      */
     private Heuristic.Type heuristic;
