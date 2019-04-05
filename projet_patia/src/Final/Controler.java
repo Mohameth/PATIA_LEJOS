@@ -1,0 +1,111 @@
+package Final;
+
+import java.awt.Point;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import lejos.hardware.Button;
+import lejos.hardware.Key;
+import lejos.hardware.Sound;
+import lejos.hardware.lcd.LCD;
+import lejos.robotics.navigation.Pose;
+
+public class Controler implements MyObserver{
+
+	private MyNavigator nav;
+	private Pince pince;
+	private TouchSensor touch;
+	private Cam_Palet cam;
+	private Change_Repere transform;
+	private static ColorSensorThread mysensor;
+	private HashMap<String,Point> lineCoord;
+
+	public Controler() {
+		this.nav = new MyNavigator();
+		this.pince = new Pince(StateP.CLOSE);
+		this.touch = new TouchSensor();
+		this.cam = new Cam_Palet();
+		this.transform = new Change_Repere();
+		mysensor = new ColorSensorThread();
+		
+		mysensor.addObserver(this);
+		mysensor.start(); //start color detector
+		
+		lineCoord = new HashMap<>();
+		lineCoord.put("red", new Point(157,0));
+		lineCoord.put("green", new Point(0,85));
+		lineCoord.put("blue", new Point(0,215));
+		lineCoord.put("yellow", new Point(50,0));
+	}
+	
+	
+	
+	public void StartProg(int numPalet) {
+//		LCD.drawString("press to start", 0, 0);
+//		Button.waitForAnyPress();
+//		LCD.clear();
+		
+		ArrayList<Point> palets = cam.GetPaletList();
+		Point p = new Point(0,0);
+		if (! palets.isEmpty()) {
+			p = palets.get(0);
+			p = this.transform.getPoint(p);
+			LCD.drawString("go to" + p.x +"," + p.y, 0, 0);
+			
+			this.GoToPalet(p);
+			p = this.transform.getPoint(palets.get(1));
+			this.GoToPalet(p);
+		}
+		
+	}
+	
+	public void rammenePalet() {
+		pince.FermePince();
+		nav.goTo(-5, 0);
+		while(nav.isMoving());
+		pince.OuvrirPince();
+		nav.DeposePalet();
+	}
+	
+	public void GoToPalet(Point p) {
+		nav.goTo(p.x,p.y);
+		
+		while (nav.isMoving() && !touch.isPressed());
+		if (nav.isMoving()) {
+			nav.stop();
+			//nav.setCoord(p.x, p.y);
+			this.rammenePalet();
+		} else {
+			//nav.setCoord(p.x, p.y);
+			LCD.clear();
+			LCD.drawString("palet non detecte", 1, 1);
+		}
+	}
+	
+	public void CloseProg() {
+		this.pince.FermePince();
+		this.nav.stop();
+
+		this.mysensor.stopMe();
+	}
+
+
+	@Override
+	public void update(String newCol) {
+		//notifier le navigator ici
+		Point p = lineCoord.get(newCol);
+		if (p != null) {
+			if (p.x == 0) {
+				p = transform.getPoint(p);
+				p.x = (int) nav.getCoord().getX();
+				nav.setCoord(p.x, p.y);
+			} else {
+				p = transform.getPoint(p);
+				p.y = (int) nav.getCoord().getY();
+				nav.setCoord(p.x, p.y);
+			}
+		}
+	}
+}

@@ -49,7 +49,7 @@ public class WallDetector {
 			sonicdistance.fetchSample(sample, 0);
 			lcddisplay.clear();
 			lcddisplay.drawString("distance: " + sample[0], 0, 1);
-			if (sample[0] < 0.1) {
+			if (sample[0] < 0.2) {
 				fini = true;
 				drive.stop();
 			}

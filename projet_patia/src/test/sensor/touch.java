@@ -1,5 +1,6 @@
 package test.sensor;
 
+import Final.TouchSensor;
 import lejos.hardware.Button;
 import lejos.hardware.port.SensorPort;
 import lejos.utility.Delay;
