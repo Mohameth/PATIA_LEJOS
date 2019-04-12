@@ -1,0 +1,12 @@
+package MyNavigator;
+
+public enum StateRobot {
+	STARTING,
+	OPENPINCE,
+	GOTOPALET,
+	CLOSEPINCE,
+	EVITE,
+	GOTOGOAL,
+	OPENPINCEGOAL,
+	GOBACKWARD
+}
