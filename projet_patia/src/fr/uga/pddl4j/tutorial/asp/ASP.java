@@ -20,9 +20,15 @@ import fr.uga.pddl4j.util.SequentialPlan;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import Final.Cam_Palet;
+
+import java.awt.Point;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -239,11 +245,63 @@ public final class ASP extends AbstractStateSpacePlanner {
         final ProblemFactory factory = ProblemFactory.getInstance();
 
         File domain = (File) arguments.get(Planner.DOMAIN);
-        File problem = (File) arguments.get(Planner.PROBLEM);
+        
+        String strProblem = new String("");
+        strProblem = strProblem.concat("(define (problem pb_robot)\r\n" + 
+        		"  (:domain dataRobot)\r\n" + 
+        		"\r\n" + 
+        		"  (:objects\r\n" + 
+        		"     C3PO - robot\n" +
+        		"	  p - pince\n" + 
+        		"     ");
+        //Cam_Palet cam = new Cam_Palet();
+        //ArrayList<Point> palets = cam.GetPaletList();
+        
+        ArrayList<Point> palets = new ArrayList<Point>();
+        palets.add(new Point(5, 5));
+        palets.add(new Point(8, 8));
+        palets.add(new Point(9, 10));
+        //HashMap<String, Point> infoPalets 
+        
+        int i = 0;
+        for (Point p : palets) {
+        	strProblem = strProblem.concat("pal"+i + " ");
+        	i++;
+        }
+        strProblem = strProblem.concat("- palet\n		 ");
+        
+        i = 0;
+        for (Point p : palets) {
+        	strProblem = strProblem.concat("emppal"+i + " ");
+        	i++;
+        }
+        strProblem = strProblem.concat("emprobot - coord)\n \n (:init (open p)\n		");
+        
+        i = 0;
+        for (Point p : palets) {
+        	strProblem = strProblem.concat("(at pal"+i+" emppal"+i+")\n		");
+        	i++;
+        }
+        strProblem = strProblem.concat("( at C3PO emprobot)\n  )\n\n  ");
+        strProblem = strProblem.concat("(:goal (and (in pal1 C3PO) (close p)))\n)");
+        
+        System.out.println("YOOOOOOOOOOO");
+        System.err.println(strProblem);
+        
+        //File problem = (File) arguments.get(Planner.PROBLEM);
+        File customProblem = new File("customProblem.pddl");
         ErrorManager errorManager = null;
         try {
-            errorManager = factory.parse(domain, problem);
+            if (customProblem.createNewFile()) {
+            	System.out.println("Custom problem created");
+            }
+            FileWriter fw = new FileWriter(customProblem, false);
+            fw.write(strProblem);
+            fw.close();
+            
+            errorManager = factory.parse(domain, customProblem);
         } catch (IOException e) {
+        	e.printStackTrace();
             Planner.getLogger().trace("\nunexpected error when parsing the PDDL planning problem description.");
             System.exit(0);
         }

@@ -4,31 +4,31 @@
 
   (:types place physobj - object
           pinceOuverte pinceFerme - pince
-          coordX coordY - place
+          coord - place
           palet robot - physobj
     )
 
   (:predicates 	(close  ?obj - pince)
                 (open  ?obj - pince)
-                (at ?obj - physobj ?loc1 - coordX ?loc2 - coordY)
+                (at ?obj - physobj ?loc - coord)
                 (in ?palet - palet ?robot - robot))
 
   (:action load-palet
-    :parameters (?pal - palet ?robot - robot ?coordX - coordX ?coordY - coordY ?modpince - pince)
-    :precondition (and (at ?robot ?coordX ?coordY) (and (at ?pal ?coordX ?coordY) (open ?modpince)))
-    :effect (and (in ?pal ?robot) (not (open ?modpince)) (close ?modpince) ( not ( at ?pal ?coordX ?coordY )))
+    :parameters (?pal - palet ?robot - robot ?coord - coord ?modpince - pince)
+    :precondition (and (at ?robot ?coord) (and (at ?pal ?coord) (open ?modpince)))
+    :effect (and (in ?pal ?robot) (not (open ?modpince)) (close ?modpince) ( not ( at ?pal ?coord)))
   )
 
   (:action unload-palet
-    :parameters (?pal - palet ?robot - robot ?coordX - coordX ?coordY - coordY ?modpince - pince)
-    :precondition (and (at ?robot ?coordX ?coordY) (close ?modpince) (in ?pal ?robot))
-    :effect (and (not (in ?pal ?robot)) (open ?modpince) (not (close ?modpince)) (at ?pal ?coordX ?coordY))
+    :parameters (?pal - palet ?robot - robot ?coord - coord ?modpince - pince)
+    :precondition (and (at ?robot ?coord) (close ?modpince) (in ?pal ?robot))
+    :effect (and (not (in ?pal ?robot)) (open ?modpince) (not (close ?modpince)) (at ?pal ?coord))
   )
 
   (:action goto
-    :parameters (?robot - robot ?fromX - coordX ?fromY - coordY ?toX - coordX ?toY - coordY )
-    :precondition (at ?robot ?fromX ?fromY )
-    :effect (and (not ( at ?robot ?fromX ?fromY)) (at ?robot ?toX ?toY))
+    :parameters (?robot - robot ?from - coord ?to - coord)
+    :precondition (at ?robot ?from)
+    :effect (and (not ( at ?robot ?from)) (at ?robot ?to))
   )
 
 
