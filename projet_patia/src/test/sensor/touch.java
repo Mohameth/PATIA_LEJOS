@@ -10,7 +10,7 @@ public class touch {
     {
         log("Program Starting");
 
-        TouchSensor uTouch = new TouchSensor(SensorPort.S4);
+        TouchSensor uTouch = new TouchSensor();
         waitForTouch(uTouch);
 
         log("Program Ending");

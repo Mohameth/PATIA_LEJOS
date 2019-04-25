@@ -1,7 +1,8 @@
 package HelloWorld;
+
 import java.util.Arrays;
 
-import ColorCal.IOFile;
+import HelloWorld.IOFile;
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.Keys;
