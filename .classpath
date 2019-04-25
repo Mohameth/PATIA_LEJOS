@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 1"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 10"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 11"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 12"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 13"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 2"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 3"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 4"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 5"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 6"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 7"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 8"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Beginning Robotics Programming/beg-robotics-programming-in-java-w-lego-mindstorms-master/Chapter 9"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/1 - Controller Initial/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/2 - Tracking a Straight Line/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/3 - Sweeping for the Path/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/4 - Limited Sweep/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/5 - Narrow Seek/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 10/6 - Final/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 6/1 - Hello/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 6/2 - HelloWorld/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 7/Motor/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 7/Touch/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 8/1 - Hello World/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 8/2 - Differential Drive/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 9/1 - First Look at the Color Sensor/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 9/2 - Detecting the Path/src"/>
+	<classpathentry kind="src" path="Mindstorm/Livres/Lego Mindstorm EV3/Code_bundle/Chapter 9/3 - Interrupting the Motion/src"/>
+	<classpathentry kind="src" path="projet/src"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/ev3/3rdparty/opencv-2411.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/ev3/dbusjava.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/ev3/ev3classes.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/pc/3rdparty/commons-cli.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/pc/3rdparty/jcommon.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/pc/3rdparty/jfreechart.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/pc/3rdparty/jsch-0.1.50.jar"/>
+	<classpathentry kind="lib" path="leJOS_EV3_0.9.1-beta/lib/pc/ev3tools.jar"/>
+	<classpathentry kind="output" path="projet/bin"/>
+</classpath>
