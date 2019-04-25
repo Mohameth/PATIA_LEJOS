@@ -10,7 +10,7 @@ public class Pince {
 
 	static EV3LargeRegulatedMotor pince = new EV3LargeRegulatedMotor(MotorPort.D);
 	static int speed = 500;
-	static int delayPince = 1500;	
+	static int delayPince = 1000;	
 
 	
 	public StateP state;

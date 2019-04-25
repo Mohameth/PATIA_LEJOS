@@ -21,6 +21,8 @@ public class Controler implements MyObserver{
 	private Change_Repere transform;
 	private static ColorSensorThread mysensor;
 	private HashMap<String,Point> lineCoord;
+	private ArrayList<Point> palets;
+	private int current;
 
 	public Controler() {
 		this.nav = new MyNavigator();
@@ -38,50 +40,111 @@ public class Controler implements MyObserver{
 		lineCoord.put("green", new Point(0,85));
 		lineCoord.put("blue", new Point(0,215));
 		lineCoord.put("yellow", new Point(50,0));
+		
+		palets = cam.GetPaletList();
+		current = 0;
 	}
 	
 	
 	
-	public void StartProg(int numPalet) {
-//		LCD.drawString("press to start", 0, 0);
-//		Button.waitForAnyPress();
-//		LCD.clear();
+	public void StartProg() {
+		LCD.drawString("press to start", 0, 0);
+		Button.waitForAnyPress();
+		LCD.clear();
+		//nav.rotate90();
 		
-		ArrayList<Point> palets = cam.GetPaletList();
 		Point p = new Point(0,0);
 		if (! palets.isEmpty()) {
-			p = palets.get(0);
+			p = palets.get(current);
 			p = this.transform.getPoint(p);
-			LCD.drawString("go to" + p.x +"," + p.y, 0, 0);
 			
-			this.GoToPalet(p);
-			p = this.transform.getPoint(palets.get(1));
-			this.GoToPalet(p);
+			LCD.drawString("1e Palet : go to" + p.x +"," + p.y, 0, 0);
+			
+			this.FirstPalet(p);
+			current++;
+			p = getCible(current);
+			while (p != null) {
+				p = this.transform.getPoint(p);
+				this.GoToPalet(p);
+				LCD.drawString(current + "e Palet : go to" + p.x +"," + p.y, 0, 0);
+			}
 		}
 		
 	}
 	
-	public void rammenePalet() {
+	public void rammenePalet(Point p) {
 		pince.FermePince();
-		nav.goTo(-5, 0);
+		nav.goTo(-5, 0,180);
 		while(nav.isMoving());
+		float head = (float) getAngle(p);
+		LCD.drawInt((int) head, 5, 6);
+		//nav.setCoord(-10, 0, head+180);
 		pince.OuvrirPince();
 		nav.DeposePalet();
 	}
 	
-	public void GoToPalet(Point p) {
-		nav.goTo(p.x,p.y);
+	
+	public Point getCible(int current) {
+		return this.palets.get(current);
+	}
+	
+	public double getAngle(Point p) { 
+		double Np = Math.sqrt(p.x*p.x + p.y*p.y);
+		return Math.toDegrees(Math.acos(p.x/Np)); 
+	}
+	
+	public double getDist(Point p) {
+		return Math.sqrt(p.x*p.x + p.y*p.y);
+	}
+
+	public void FirstPalet(Point p) {
+
+		// calcul d'angle et de distance
+		int head = (int) getAngle(p);
+		int dist = (int) getDist(p);
+		if (p.y < 0)
+			head = -head;
 		
-		while (nav.isMoving() && !touch.isPressed());
-		if (nav.isMoving()) {
-			nav.stop();
-			//nav.setCoord(p.x, p.y);
-			this.rammenePalet();
-		} else {
-			//nav.setCoord(p.x, p.y);
-			LCD.clear();
-			LCD.drawString("palet non detecte", 1, 1);
-		}
+		// Deplacement vers le palet
+		nav.travel(dist, head);
+		pince.FermePince();
+		// Deplacement vers le camps "adverse"
+		nav.travel(0, -head);
+		nav.travel(25, 90);
+		nav.travel(240-p.x+10, -90);
+		// depose le palet
+		pince.OuvrirPince();
+		nav.travel(-10, 0);
+		nav.travel(0, 180);
+		
+		// pos final 270,palet.x-25
+		this.transform.setCote("d");
+		this.transform.setx(palets.get(current).x-25);
+		this.transform.sety(285);
+	}
+	
+	public void GoToPalet(Point p) {
+		// calcul d'angle et de distance
+		int head = (int) getAngle(p);
+		System.out.println(getAngle(p));
+		int dist = (int) getDist(p);
+		if (p.y < 0)
+			head = -head;
+
+		// Deplacement vers le palet
+		nav.travel(dist, head);
+		pince.FermePince();
+		
+		// Retour case départ
+		nav.travel(-dist, 0);
+		nav.travel(0, -head);
+		
+		// depose le palet
+		nav.travel(10, 180);
+		pince.OuvrirPince();
+		nav.travel(-10,0);
+		nav.travel(0, 180);
+		
 	}
 	
 	public void CloseProg() {
@@ -95,17 +158,21 @@ public class Controler implements MyObserver{
 	@Override
 	public void update(String newCol) {
 		//notifier le navigator ici
-		Point p = lineCoord.get(newCol);
-		if (p != null) {
-			if (p.x == 0) {
-				p = transform.getPoint(p);
-				p.x = (int) nav.getCoord().getX();
-				nav.setCoord(p.x, p.y);
-			} else {
-				p = transform.getPoint(p);
-				p.y = (int) nav.getCoord().getY();
-				nav.setCoord(p.x, p.y);
-			}
-		}
+//		Point p = lineCoord.get(newCol);
+//		if (p != null) {
+//			if (p.x == 0) {
+//				p = transform.getPoint(p);
+//				p.x = (int) nav.getCoord().getX();
+//				nav.stop();
+//				nav.setCoord(p.x, p.y,nav.getCoord().getHeading());
+//				nav.resume();
+//			} else {
+//				p = transform.getPoint(p);
+//				p.y = (int) nav.getCoord().getY();
+//				nav.stop();
+//				nav.setCoord(p.x, p.y,nav.getCoord().getHeading());
+//				nav.resume();
+//			}
+//		}
 	}
 }
