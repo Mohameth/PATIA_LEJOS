@@ -7,6 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.lejos.ev3.ldt.LEJOS_EV3_LIBRARY_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="lib/pddl4j-3.8.jar"/>
+	<classpathentry kind="lib" path="/home/simon/Documents/M1/PATIA/projet_patia/lib/pddl4j-3.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -67,6 +67,8 @@ public class Controler implements MyObserver{
 				p = this.transform.getPoint(p);
 				this.GoToPalet(p);
 				LCD.drawString(current + "e Palet : go to" + p.x +"," + p.y, 0, 0);
+				current++;
+				p = getCible(current);
 			}
 		}
 		
@@ -85,7 +87,10 @@ public class Controler implements MyObserver{
 	
 	
 	public Point getCible(int current) {
-		return this.palets.get(current);
+		if (this.palets.size()>current)
+			return this.palets.get(current);
+		else
+			return null;
 	}
 	
 	public double getAngle(Point p) { 
