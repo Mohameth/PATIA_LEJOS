@@ -11,14 +11,13 @@ import fr.uga.pddl4j.planners.statespace.AbstractStateSpacePlanner;
 import fr.uga.pddl4j.planners.statespace.StateSpacePlanner;
 import fr.uga.pddl4j.planners.statespace.search.strategy.AStar;
 import fr.uga.pddl4j.planners.statespace.search.strategy.Node;
+import fr.uga.pddl4j.util.AbstractCodedOp;
 import fr.uga.pddl4j.util.BitOp;
 import fr.uga.pddl4j.util.BitState;
 import fr.uga.pddl4j.util.CondBitExp;
 import fr.uga.pddl4j.util.MemoryAgent;
 import fr.uga.pddl4j.util.Plan;
 import fr.uga.pddl4j.util.SequentialPlan;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import Final.Cam_Palet;
 
@@ -254,14 +253,14 @@ public final class ASP extends AbstractStateSpacePlanner {
         		"     C3PO - robot\n" +
         		"	  p - pince\n" + 
         		"     ");
-        //Cam_Palet cam = new Cam_Palet();
+        Cam_Palet cam = new Cam_Palet();
         //ArrayList<Point> palets = cam.GetPaletList();
         
         ArrayList<Point> palets = new ArrayList<Point>();
         palets.add(new Point(5, 5));
         palets.add(new Point(8, 8));
         palets.add(new Point(9, 10));
-        //HashMap<String, Point> infoPalets 
+        HashMap<String, Point> infoPalets = new HashMap<String, Point>();
         
         int i = 0;
         for (Point p : palets) {
@@ -273,6 +272,7 @@ public final class ASP extends AbstractStateSpacePlanner {
         i = 0;
         for (Point p : palets) {
         	strProblem = strProblem.concat("emppal"+i + " ");
+        	infoPalets.put("emppal"+i, p);
         	i++;
         }
         strProblem = strProblem.concat("emprobot - coord)\n \n (:init (open p)\n		");
@@ -283,9 +283,18 @@ public final class ASP extends AbstractStateSpacePlanner {
         	i++;
         }
         strProblem = strProblem.concat("( at C3PO emprobot)\n  )\n\n  ");
-        strProblem = strProblem.concat("(:goal (and (in pal1 C3PO) (close p)))\n)");
+        strProblem = strProblem.concat("(:goal (and ");
         
-        System.out.println("YOOOOOOOOOOO");
+        //strProblem = strProblem.concat("(in pal1 C3PO) (close p)");
+        
+        i = 0;
+        for (Point p : palets) {
+        	strProblem = strProblem.concat("(at pal"+i+" emprobot) ");
+        	i++;
+        } 
+        
+        strProblem = strProblem.concat("))\n)");
+        
         System.err.println(strProblem);
         
         //File problem = (File) arguments.get(Planner.PROBLEM);
@@ -335,6 +344,19 @@ public final class ASP extends AbstractStateSpacePlanner {
             // Print plan information
             Planner.getLogger().trace(String.format("%nfound plan as follows:%n%n" + pb.toString(plan)));
             Planner.getLogger().trace(String.format("%nplan total cost: %4.2f%n%n", plan.cost()));
+            
+            runParameters(pb.toString(plan), infoPalets);
+            /*for (BitOp bop : plan.actions()) {
+            	System.out.println(" -->" + bop.getName() + "<--");
+            	//System.out.println(" -->" + bop.getTypeOfParameters(0) + "<--");
+            	//if (bop.getName().equals("goto")) {
+            		System.out.println(bop.getName().toUpperCase());
+            		for (CondBitExp j : bop.getCondEffects().) {
+            			System.out.println("Param : " + j.getEffects());
+            		}
+            	//}
+            }*/
+            
         } else {
             Planner.getLogger().trace(String.format(String.format("%nno plan found%n%n")));
         }
@@ -354,5 +376,19 @@ public final class ASP extends AbstractStateSpacePlanner {
         Planner.getLogger().trace(String.format("%nmemory used:  %8.2f MBytes for problem representation%n", info.getMemoryUsedForProblemRepresentation()/(1024.0*1024.0)));
         Planner.getLogger().trace(String.format("              %8.2f MBytes for searching%n", info.getMemoryUsedToSearch()/(1024.0*1024.0)));
         Planner.getLogger().trace(String.format("              %8.2f MBytes total%n%n%n", memory/(1024.0*1024.0)));
+        
+        
+    }
+    
+    public static void runParameters(String plan, HashMap<String, Point> emplacements) {
+    	String[] lines = plan.split(System.getProperty("line.separator"));
+    	for(String line : lines){
+    		String[] res =line.split("\\s+");
+    		
+    		System.out.println(" !!! " + res[2]);
+    	}
+    	
+    	
+    	return;
     }
 }
