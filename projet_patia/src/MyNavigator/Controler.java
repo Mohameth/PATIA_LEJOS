@@ -4,10 +4,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import Final.Cam_Palet;
-import lejos.hardware.BrickFinder;
-import lejos.hardware.Keys;
-import lejos.hardware.ev3.EV3;
 import lejos.hardware.lcd.LCD;
+
 
 public class Controler implements MyObserver {
 
@@ -15,6 +13,9 @@ public class Controler implements MyObserver {
 	private Tomtom t;
 	private StateRobot state;
 	private ColorSensorThread mysensor;
+	private CalibrateDirection cal;
+	private Pince pince;
+	
 	
 	public Controler() {
 		
@@ -24,7 +25,10 @@ public class Controler implements MyObserver {
 		
 		this.cam = new Cam_Palet();
 		
-		this.state=StateRobot.OPENPINCE;
+		this.state=StateRobot.CALIBRATEDIR;
+		this.cal = new CalibrateDirection(this.t);
+		
+		//this.pince = new Pince(StateP.CLOSE);
 		
 		mysensor = new ColorSensorThread();
 		mysensor.addObserver(this);
@@ -39,7 +43,13 @@ public class Controler implements MyObserver {
 		switch (state) {
 		case OPENPINCE :
 			System.out.println("ouvir peince");
+			//this.pince.OuvrirPince();
 			state =StateRobot.GOTOPALET;
+			break;
+		case CALIBRATEDIR :
+			System.out.println("CalibrteDir");
+			this.cal.Calibrate();
+			state =StateRobot.OPENPINCE;
 			break;
 		case GOTOPALET:
 			System.out.println("Avance jusqu'au palet");
@@ -49,6 +59,8 @@ public class Controler implements MyObserver {
 			break;
 		case CLOSEPINCE:
 			System.out.println("Fermer peince");
+			this.pince.FermePince();
+			
 			state = StateRobot.EVITE;
 			break;
 		case EVITE:
@@ -87,6 +99,12 @@ public class Controler implements MyObserver {
 		}else {
 			return false;
 		}
+	}
+	
+	private void calibrateDirection() {
+		// Get an instance of the Ultrasonic EV3 sensor
+		
+		this.cal.Calibrate();
 	}
 	
 	
