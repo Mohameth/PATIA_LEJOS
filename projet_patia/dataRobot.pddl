@@ -11,6 +11,7 @@
   (:predicates 	(close  ?obj - pince)
                 (open  ?obj - pince)
                 (at ?obj - physobj ?loc - coord)
+                (isCloser ?pal1 - physobj ?pal2 - physobj)
                 (in ?palet - palet ?robot - robot))
 
   (:action load-palet
@@ -30,6 +31,4 @@
     :precondition (at ?robot ?from)
     :effect (and (not ( at ?robot ?from)) (at ?robot ?to))
   )
-
-
 )

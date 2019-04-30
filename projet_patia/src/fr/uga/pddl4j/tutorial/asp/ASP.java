@@ -18,13 +18,15 @@ import fr.uga.pddl4j.util.CondBitExp;
 import fr.uga.pddl4j.util.MemoryAgent;
 import fr.uga.pddl4j.util.Plan;
 import fr.uga.pddl4j.util.SequentialPlan;
-
+import lejos.hardware.Button;
 import Final.Cam_Palet;
 
 import java.awt.Point;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -233,15 +235,113 @@ public final class ASP extends AbstractStateSpacePlanner {
      * @param args the arguments of the command line.
      */
     public static void main(String[] args) {
-        final Properties arguments = ASP.parseCommandLine(args);
+    	try 
+        {
+          int port = 63000;
+          
+          /*EV3 ev3brick = (EV3) BrickFinder.getLocal();
+          Sound.setVolume(10);
+          Sound.beep();*/
+
+          // Create a socket to listen on the port.
+          DatagramSocket dsocket = new DatagramSocket(port);
+
+          // Create a buffer to read datagrams into. If a
+          // packet is larger than this buffer, the
+          // excess will simply be discarded!
+          byte[] buffer = new byte[2048];
+          byte[] bufferSend = new byte[2048];
+
+          // Create a packet to receive data into the buffer
+          DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+          
+          //A packet for the pddl data
+          DatagramPacket pddlData;
+
+          // Now loop forever, waiting to receive packets and printing them.
+          boolean again = true;
+          while (again) 
+          {
+        	String data = new String();
+            // Wait to receive a datagram
+            //dsocket.receive(packet);
+            
+            
+            //Once received we launch pddl4j and send the info
+        	System.out.println("Starting pddl ... ");
+            data = run(args);
+            bufferSend = data.getBytes();
+            System.out.println("pddl done.");
+            
+            pddlData = new DatagramPacket(bufferSend, bufferSend.length);
+            
+            System.out.println("Sending data ... ");
+            dsocket.send(pddlData);
+            System.out.println("data sent");
+
+            // Convert the contents to a string, and display them
+            /*String msg = new String(buffer, 0, packet.getLength());
+            //System.out.println(packet.getAddress().getHostName() + ": "
+            //    + msg);
+            
+            String[] palets = msg.split("\n");
+            
+            for (int i = 0; i < palets.length; i++) 
+            {
+            	String[] coord = palets[i].split(";");
+            	int x = Integer.parseInt(coord[1]);
+            	int y = Integer.parseInt(coord[2]);
+            
+            	System.out.println();
+            	LCD.clear();
+            	LCD.drawString("                                                                     ", 0, i);
+            	LCD.drawString("x: " + Integer.toString(x) + " y: " + Integer.toString(y) , 0, i);
+            }*/
+            
+
+            // Reset the length of the packet before reusing it.
+            packet.setLength(buffer.length);
+            
+            if(Button.ESCAPE.isDown()) {
+    			again = false;
+    		}
+          }
+         
+        } 
+        catch (Exception e) 
+        {
+          System.err.println(e);
+        }
+    }
+    
+    public static String initParameters(String plan, HashMap<String, Point> emplacements) {
+    	String[] lines = plan.split(System.getProperty("line.separator"));
+    	String coord = null;
+    	
+    	//for(String line : lines){
+    		String[] res = lines[0].split("\\s+");
+    		String nameFunction = res[2];
+    		if (nameFunction.equals("goto")) {
+    			String namePal = res[5].substring(0, res[5].length() -1);
+    			
+    			coord = emplacements.get(namePal).getX() + " " + emplacements.get(namePal).getY();
+    			
+    			System.out.println("TODO : goto " + emplacements.get(namePal) + "[" + namePal + "]");
+    		}
+    	//}
+    	
+    	return coord;
+    }
+    
+    public static String run(String[] args) {
+    	final Properties arguments = ASP.parseCommandLine(args);
         if (arguments == null) {
             ASP.printUsage();
             System.exit(0);
         }
-
-        final ASP planner = new ASP(arguments);
-
-        final ProblemFactory factory = ProblemFactory.getInstance();
+        
+    	final ASP planner = new ASP(arguments);
+    	final ProblemFactory factory = ProblemFactory.getInstance();
 
         File domain = (File) arguments.get(Planner.DOMAIN);
         
@@ -253,13 +353,16 @@ public final class ASP extends AbstractStateSpacePlanner {
         		"     C3PO - robot\n" +
         		"	  p - pince\n" + 
         		"     ");
+        System.out.println("Accessing camera ... ");
         Cam_Palet cam = new Cam_Palet();
-        //ArrayList<Point> palets = cam.GetPaletList();
+        System.out.println("Accessing camera ... ");
+        ArrayList<Point> palets = cam.GetPaletList();
+        System.out.println("Camera ok");
         
-        ArrayList<Point> palets = new ArrayList<Point>();
+        /*ArrayList<Point> palets = new ArrayList<Point>();
         palets.add(new Point(5, 5));
         palets.add(new Point(8, 8));
-        palets.add(new Point(9, 10));
+        palets.add(new Point(9, 10));*/
         HashMap<String, Point> infoPalets = new HashMap<String, Point>();
         
         int i = 0;
@@ -343,9 +446,11 @@ public final class ASP extends AbstractStateSpacePlanner {
         if (plan != null) {
             // Print plan information
             Planner.getLogger().trace(String.format("%nfound plan as follows:%n%n" + pb.toString(plan)));
-            Planner.getLogger().trace(String.format("%nplan total cost: %4.2f%n%n", plan.cost()));
+            //Planner.getLogger().trace(String.format("%nplan total cost: %4.2f%n%n", plan.cost()));
             
-            runParameters(pb.toString(plan), infoPalets);
+            String coord = initParameters(pb.toString(plan), infoPalets);
+            
+            return coord;
             /*for (BitOp bop : plan.actions()) {
             	System.out.println(" -->" + bop.getName() + "<--");
             	//System.out.println(" -->" + bop.getTypeOfParameters(0) + "<--");
@@ -359,10 +464,11 @@ public final class ASP extends AbstractStateSpacePlanner {
             
         } else {
             Planner.getLogger().trace(String.format(String.format("%nno plan found%n%n")));
+            return null;
         }
 
         // Get the runtime information from the planner
-        Statistics info = planner.getStatistics();
+        /*Statistics info = planner.getStatistics();
 
 // Print time information
         long time = info.getTimeToParse() +  info.getTimeToEncode() + info.getTimeToSearch();
@@ -375,20 +481,7 @@ public final class ASP extends AbstractStateSpacePlanner {
         long memory = info.getMemoryUsedForProblemRepresentation() + info.getMemoryUsedToSearch();
         Planner.getLogger().trace(String.format("%nmemory used:  %8.2f MBytes for problem representation%n", info.getMemoryUsedForProblemRepresentation()/(1024.0*1024.0)));
         Planner.getLogger().trace(String.format("              %8.2f MBytes for searching%n", info.getMemoryUsedToSearch()/(1024.0*1024.0)));
-        Planner.getLogger().trace(String.format("              %8.2f MBytes total%n%n%n", memory/(1024.0*1024.0)));
-        
-        
-    }
-    
-    public static void runParameters(String plan, HashMap<String, Point> emplacements) {
-    	String[] lines = plan.split(System.getProperty("line.separator"));
-    	for(String line : lines){
-    		String[] res =line.split("\\s+");
-    		
-    		System.out.println(" !!! " + res[2]);
-    	}
-    	
-    	
-    	return;
+        Planner.getLogger().trace(String.format("              %8.2f MBytes total%n%n%n", memory/(1024.0*1024.0)));*/
+
     }
 }

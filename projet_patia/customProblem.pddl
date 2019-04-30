@@ -14,5 +14,5 @@
 		( at C3PO emprobot)
   )
 
-  (:goal (and (in pal1 C3PO) (close p)))
+  (:goal (and (at pal0 emprobot) (at pal1 emprobot) (at pal2 emprobot) ))
 )
